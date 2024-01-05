@@ -1,14 +1,14 @@
 version: "3"
 services:
   node-0:
-    image: cassandra:latest
+    image: cassandra:3.11.16
     container_name: node-0
     ports:
       - 9042:9042
     environment:
       - CASSANDRA_SEEDS=node-0,node-1
   node-1:
-    image: cassandra:latest
+    image: cassandra:3.11.16
     container_name: node-1
     environment:
       - CASSANDRA_SEEDS=node-0,node-1

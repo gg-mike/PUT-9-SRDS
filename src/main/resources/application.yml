@@ -1,7 +1,11 @@
+cassandra:
+  contact-points: 127.0.0.1
+  port: 9042
+  schema-action: create_if_not_exists
+  local-datacenter: datacenter1
+  keyspace-name: test2
+  replicationFactor: 2
+
 spring:
   cassandra:
-    keyspace-name: srdskeyspace
-    contact-points: localhost
-    port: 9042
     schema-action: create_if_not_exists
-    local-datacenter: node-0
