@@ -1,0 +1,7 @@
+spring:
+  cassandra:
+    keyspace-name: srdskeyspace
+    contact-points: localhost
+    port: 9042
+    schema-action: create_if_not_exists
+    local-datacenter: node-0
