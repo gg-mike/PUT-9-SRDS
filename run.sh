@@ -1,0 +1,1 @@
+java -jar ./target/srds-project-0.0.1-SNAPSHOT-spring-boot.jar
