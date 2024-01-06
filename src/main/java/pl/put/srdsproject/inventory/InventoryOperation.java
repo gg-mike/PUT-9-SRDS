@@ -1,7 +1,8 @@
 package pl.put.srdsproject.inventory;
 
 public record InventoryOperation(
-        InventoryKey inventoryKey,
+        InventoryKey sourceInventoryKey,
+        InventoryKey targetInventoryKey,
         Long numberOfItems
 ) {
 }

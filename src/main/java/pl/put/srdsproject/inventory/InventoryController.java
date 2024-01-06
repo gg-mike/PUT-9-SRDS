@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/inventory")
@@ -19,12 +20,17 @@ public class InventoryController {
 
     @PostMapping
     public Inventory addProducts(@RequestBody InventoryOperation operation) {
-        return inventoryService.addProducts(operation.inventoryKey(), operation.numberOfItems());
+        return inventoryService.addProducts(operation.sourceInventoryKey(), operation.numberOfItems());
     }
 
     @DeleteMapping
     public Inventory removeProducts(@RequestBody InventoryOperation operation) {
-        return inventoryService.removeProducts(operation.inventoryKey(), operation.numberOfItems());
+        return inventoryService.removeProducts(operation.sourceInventoryKey(), operation.numberOfItems());
+    }
+
+    @PutMapping
+    public Set<Inventory> moveProducts(@RequestBody InventoryOperation operation) {
+        return inventoryService.moveProducts(operation.sourceInventoryKey(), operation.targetInventoryKey(), operation.numberOfItems());
     }
 
 
