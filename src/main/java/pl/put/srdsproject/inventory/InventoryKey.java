@@ -17,8 +17,8 @@ import java.io.Serializable;
 @Setter
 public class InventoryKey implements Serializable {
 
-    @PrimaryKeyColumn(name = "location_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private String locationId;
+    @PrimaryKeyColumn(name = "unique_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    private String unique_id;
 
     @PrimaryKeyColumn(name = "product_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private String productId;

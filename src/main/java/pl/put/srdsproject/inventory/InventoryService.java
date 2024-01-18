@@ -2,11 +2,11 @@ package pl.put.srdsproject.inventory;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.put.srdsproject.util.NotFoundException;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +32,9 @@ public class InventoryService {
 
     public List<Inventory> findProductsByHandlerIdAndRequestId(String applicationId, String requestId) {
         return inventoryRepository.findProductsByHandlerIdAndRequestId(applicationId, requestId);
+    }
+
+    public List<InventoryReport> getReport() {
+        return Collections.emptyList();
     }
 }
