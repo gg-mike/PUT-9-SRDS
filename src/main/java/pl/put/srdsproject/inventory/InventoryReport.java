@@ -1,6 +1,6 @@
 package pl.put.srdsproject.inventory;
 
-public record InventoryOperation(
+public record InventoryReport(
         String productId,
         Long quantity
 ) {

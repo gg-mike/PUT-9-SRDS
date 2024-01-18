@@ -13,11 +13,7 @@ public class Inventory {
     @PrimaryKey("id")
     private InventoryKey id;
 
-    private Long quantity;
+    private String handlerId;
+    private String requestId;
 
-
-    public Inventory(InventoryKey id, Long quantity) {
-        this.id = id;
-        this.quantity = quantity;
-    }
 }

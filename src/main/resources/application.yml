@@ -6,6 +6,12 @@ cassandra:
   keyspace-name: test2
   replicationFactor: 2
 
+  update-delay: 1000
+  max-iterations: 10
+
+application:
+  id: ${APP_ID:1}
+
 spring:
   cassandra:
     schema-action: create_if_not_exists
