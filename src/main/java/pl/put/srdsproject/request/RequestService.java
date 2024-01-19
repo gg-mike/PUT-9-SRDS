@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pl.put.srdsproject.fulfilled.FulfilledService;
 import pl.put.srdsproject.inventory.Inventory;
 import pl.put.srdsproject.inventory.InventoryService;
+import pl.put.srdsproject.util.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RequestService {
     private final RequestRepository requestRepository;
+    private final FulfilledService fulfilledService;
     private final InventoryService inventoryService;
 
     @Value("${application.id}")
@@ -64,6 +67,13 @@ public class RequestService {
     }
 
     private void processRequest(Request request) {
+        // check if request was already fulfilled (crush happened between fulfilled added and request deleted)
+        try {
+            fulfilledService.getFulfilled(request.getId());
+            requestRepository.deleteById(request.getId());
+            return;
+        } catch(NotFoundException ignored) {}
+
         var previouslyClaimedProducts = inventoryService.findProductsByHandlerIdAndRequestId(applicationId, request.getId()); // if request processing failed while some products were claimed already
         List<Inventory> collectedProducts = new ArrayList<>(previouslyClaimedProducts);
 
@@ -97,11 +107,11 @@ public class RequestService {
                 product.setRequestId(null);
             }
             inventoryService.saveAll(collectedProducts);
+            request.setQuantity(-1L);
             log.warn("Could not fulfill request: {}", request.getId());
         }
 
-        //todo add to fulfilled
-
+        fulfilledService.addFulfilled(request);
         requestRepository.deleteById(request.getId());
     }
 
