@@ -1,4 +1,4 @@
-package pl.put.srdsproject.fulfillment;
+package pl.put.srdsproject.fulfilled;
 
 public record FulfilledReport(
         String productId,

@@ -1,4 +1,4 @@
-package pl.put.srdsproject.fulfillment;
+package pl.put.srdsproject.fulfilled;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

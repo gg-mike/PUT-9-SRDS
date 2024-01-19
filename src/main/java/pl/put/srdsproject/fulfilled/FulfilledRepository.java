@@ -1,4 +1,4 @@
-package pl.put.srdsproject.fulfillment;
+package pl.put.srdsproject.fulfilled;
 
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;

@@ -1,4 +1,4 @@
-package pl.put.srdsproject.fulfillment;
+package pl.put.srdsproject.fulfilled;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
