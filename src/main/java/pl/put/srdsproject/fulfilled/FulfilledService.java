@@ -16,10 +16,12 @@ public class FulfilledService {
 
     public FulfilledReport getReport() {
         var all = fulfillmentRepository.findAll();
+        var failed = all.stream().filter(fulfilled -> !fulfilled.isSuccessful()).toList();
         var succeeded  = all.stream().filter(Fulfilled::isSuccessful).toList();
         return new FulfilledReport(
-                all.size() - succeeded.size(),
+                failed.size(),
                 succeeded.size(),
+                failed.stream().collect(groupingBy(Fulfilled::getProductId, summingLong(Fulfilled::getQuantity))),
                 succeeded.stream().collect(groupingBy(Fulfilled::getProductId, summingLong(Fulfilled::getQuantity)))
         );
     }

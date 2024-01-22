@@ -12,7 +12,7 @@ GET localhost:3000/fulfilled/{{}}
 POST localhost:3000/inventory
 Content-Type: application/json
 
-{ "productId": "test", "quantity": 10 }
+{ "productId": "test", "quantity": 10000 }
 
 ###
 
@@ -35,4 +35,21 @@ GET localhost:3000/requests/{{}}
 ###
 
 # @name Get Report
-GET localhost:3000/report
+GET localhost:8080/report
+
+###
+
+# @name Setup DB
+POST localhost:8080/setup
+Content-Type: application/json
+
+{
+  "test-1": 1000,
+  "test-3": 1000,
+  "test-4": 1000
+}
+
+###
+
+# @name Clean DB
+DELETE localhost:8080/setup
