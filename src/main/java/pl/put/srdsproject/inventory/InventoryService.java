@@ -47,4 +47,8 @@ public class InventoryService {
                 all.stream().collect(groupingBy(Inventory::getProductId, counting()))
         );
     }
+
+    public void deleteAll() {
+        inventoryRepository.deleteAll();
+    }
 }

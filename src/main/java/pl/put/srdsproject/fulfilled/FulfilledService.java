@@ -36,4 +36,7 @@ public class FulfilledService {
         fulfillmentRepository.save(new Fulfilled(request));
     }
 
+    public void deleteAll() {
+        fulfillmentRepository.deleteAll();
+    }
 }

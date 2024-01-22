@@ -52,6 +52,10 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
+    public void deleteAll() {
+        requestRepository.deleteAll();
+    }
+
 
     @Scheduled(fixedRate = 10_000)
     public void processNewRequests() {
