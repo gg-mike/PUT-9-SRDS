@@ -5,18 +5,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summarizingLong;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
-    public List<Inventory> addProduct(String productId, Long quantity) {
+    public List<Inventory> add(String productId, Long quantity) {
         var products = new ArrayList<Inventory>();
         for (int i = 0; i < quantity; i++) {
-            products.add(new Inventory(new InventoryKey(UUID.randomUUID().toString(), productId), "", ""));
+            products.add(new Inventory(UUID.randomUUID().toString(), productId, "", ""));
         }
 
         return inventoryRepository.saveAll(products);
@@ -35,9 +34,17 @@ public class InventoryService {
         return inventoryRepository.findProductsByHandlerIdAndRequestId(applicationId, requestId);
     }
 
-    public Map<String, LongSummaryStatistics> getReport() {
-        return inventoryRepository.getReport()
-                .stream().map(fulfilled -> new InventoryReport(fulfilled.getId().getProductId(), 1L))
-                .collect(groupingBy(InventoryReport::productId, summarizingLong(InventoryReport::quantity)));
+    public InventoryReport getReport() {
+        var all = inventoryRepository.findAll();
+
+        return new InventoryReport(
+                all.stream()
+                        .filter(inventory -> Objects.equals(inventory.getRequestId(), ""))
+                        .collect(groupingBy(Inventory::getProductId, counting())),
+                all.stream()
+                        .filter(inventory -> !Objects.equals(inventory.getRequestId(), ""))
+                        .collect(groupingBy(Inventory::getProductId, counting())),
+                all.stream().collect(groupingBy(Inventory::getProductId, counting()))
+        );
     }
 }

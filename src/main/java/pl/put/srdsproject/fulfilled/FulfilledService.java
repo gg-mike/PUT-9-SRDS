@@ -5,28 +5,34 @@ import org.springframework.stereotype.Service;
 import pl.put.srdsproject.request.Request;
 import pl.put.srdsproject.util.NotFoundException;
 
-import java.util.LongSummaryStatistics;
-import java.util.Map;
+import java.util.List;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summarizingLong;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
 public class FulfilledService {
     private final FulfilledRepository fulfillmentRepository;
 
-    public Map<String, LongSummaryStatistics> getReport() {
-        return fulfillmentRepository.getReport()
-                .stream().map(fulfilled -> new FulfilledReport(fulfilled.getProductId(), fulfilled.getQuantity()))
-                .collect(groupingBy(FulfilledReport::productId, summarizingLong(FulfilledReport::quantity)));
+    public FulfilledReport getReport() {
+        var all = fulfillmentRepository.findAll();
+        var succeeded  = all.stream().filter(fulfilled -> fulfilled.getQuantity() != -1).toList();
+        return new FulfilledReport(
+                all.size() - succeeded.size(),
+                succeeded.size(),
+                succeeded.stream().collect(groupingBy(Fulfilled::getProductId, summingLong(Fulfilled::getQuantity)))
+        );
     }
 
-    public Fulfilled getFulfilled(String id) {
+    public List<Fulfilled> getAll() {
+        return fulfillmentRepository.findAll();
+    }
+
+    public Fulfilled getById(String id) {
         return fulfillmentRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    public void addFulfilled(Request request) {
+    public void add(Request request) {
         fulfillmentRepository.save(new Fulfilled(request));
     }
 

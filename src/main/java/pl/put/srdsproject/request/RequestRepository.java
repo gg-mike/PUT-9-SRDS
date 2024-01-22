@@ -17,7 +17,4 @@ public interface RequestRepository extends ListCrudRepository<Request, String> {
 
     @Query("DELETE FROM requests WHERE id IN ?0")
     void deleteProcessedRequests(List<String> requestIds);
-
-    @Query("SELECT product_id, quantity FROM requests WHERE quantity > 0 ALLOW FILTERING")
-    List<Request> getReport();
 }

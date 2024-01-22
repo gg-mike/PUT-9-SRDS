@@ -1,7 +1,9 @@
 package pl.put.srdsproject.request;
 
+import java.util.Map;
+
 public record RequestReport(
-        String productId,
-        Long quantity
-) {
-}
+        int unclaimed,
+        int claimed,
+        Map<String, Long> products
+) {}

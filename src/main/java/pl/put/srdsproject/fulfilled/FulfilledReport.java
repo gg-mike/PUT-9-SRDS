@@ -1,7 +1,9 @@
 package pl.put.srdsproject.fulfilled;
 
+import java.util.Map;
+
 public record FulfilledReport(
-        String productId,
-        Long quantity
-) {
-}
+        int failed,
+        int succeeded,
+        Map<String, Long> requestedProducts
+) {}

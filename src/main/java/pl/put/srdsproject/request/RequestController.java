@@ -3,8 +3,7 @@ package pl.put.srdsproject.request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LongSummaryStatistics;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -14,18 +13,23 @@ public class RequestController {
     private final RequestService requestService;
 
     @GetMapping
-    public Map<String, LongSummaryStatistics> getReport() {
-        return requestService.getReport();
+    public List<Request> getAll() {
+        return requestService.getAll();
     }
 
     @PostMapping
-    public Request addRequest(@RequestBody RequestOperation operation) {
+    public Request add(@RequestBody RequestOperation operation) {
         var request = new Request(
                 UUID.randomUUID().toString(),
                 operation.productId(),
                 operation.quantity(),
                 ""
         );
-        return requestService.addRequest(request);
+        return requestService.add(request);
+    }
+
+    @GetMapping("/{id}")
+    public Request getById(@PathVariable("id") String id) {
+        return requestService.getById(id);
     }
 }

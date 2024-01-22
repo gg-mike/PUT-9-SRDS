@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LongSummaryStatistics;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/fulfilled")
@@ -16,12 +15,12 @@ public class FulfilledController {
     private final FulfilledService fulfilledService;
 
     @GetMapping
-    public Map<String, LongSummaryStatistics> getReport() {
-        return fulfilledService.getReport();
+    public List<Fulfilled> getAll() {
+        return fulfilledService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Fulfilled getFulfilled(@PathVariable("id") String id) {
-        return fulfilledService.getFulfilled(id);
+    public Fulfilled getById(@PathVariable("id") String id) {
+        return fulfilledService.getById(id);
     }
 }

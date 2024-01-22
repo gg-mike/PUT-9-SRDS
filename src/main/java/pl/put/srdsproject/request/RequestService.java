@@ -10,10 +10,7 @@ import pl.put.srdsproject.inventory.Inventory;
 import pl.put.srdsproject.inventory.InventoryService;
 import pl.put.srdsproject.util.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LongSummaryStatistics;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.*;
 
@@ -34,14 +31,25 @@ public class RequestService {
     @Value("${cassandra.max-iterations}")
     private int maxIterations;
 
-    public Request addRequest(Request request) {
-        return requestRepository.save(request);
+    public RequestReport getReport() {
+        var all = requestRepository.findAll();
+        var claimed  = all.stream().filter(fulfilled -> !Objects.equals(fulfilled.getApplicationId(), "")).toList();
+        return new RequestReport(
+                all.size() - claimed.size(),
+                claimed.size(),
+                all.stream().collect(groupingBy(Request::getProductId, summingLong(Request::getQuantity)))
+        );
     }
 
-    public Map<String, LongSummaryStatistics> getReport() {
-        return requestRepository.getReport()
-                .stream().map(request -> new RequestReport(request.getProductId(), request.getQuantity()))
-                .collect(groupingBy(RequestReport::productId, summarizingLong(RequestReport::quantity)));
+    public List<Request> getAll() {
+        return requestRepository.findAll();
+    }
+
+    public Request getById(String id) {
+        return requestRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+    public Request add(Request request) {
+        return requestRepository.save(request);
     }
 
 
@@ -70,7 +78,7 @@ public class RequestService {
         log.info("Processing request {}", request.getId());
         // check if request was already fulfilled (crush happened between fulfilled added and request deleted)
         try {
-            fulfilledService.getFulfilled(request.getId());
+            fulfilledService.getById(request.getId());
             requestRepository.deleteById(request.getId());
             return;
         } catch(NotFoundException ignored) {}
@@ -116,7 +124,7 @@ public class RequestService {
                     request.getId(), collectedProducts.size(), request.getQuantity());
         }
 
-        fulfilledService.addFulfilled(request);
+        fulfilledService.add(request);
         requestRepository.deleteById(request.getId());
     }
 

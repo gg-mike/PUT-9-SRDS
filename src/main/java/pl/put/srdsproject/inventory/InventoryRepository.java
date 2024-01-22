@@ -12,7 +12,4 @@ public interface InventoryRepository extends ListCrudRepository<Inventory, Inven
 
     @Query("SELECT * FROM inventory WHERE handler_id = ?0 AND request_id = ?1 ALLOW FILTERING")
     List<Inventory> findProductsByHandlerIdAndRequestId(String handlerId, String requestId);
-
-    @Query("SELECT product_id FROM Inventory")
-    List<Inventory> getReport();
 }
