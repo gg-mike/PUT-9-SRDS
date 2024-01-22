@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface FulfilledRepository extends ListCrudRepository<Fulfilled, String> {
-    @Query("SELECT product_id, SUM(quantity) FROM Fulfilled WHERE quantity > 0 GROUP BY product_id")
+    @Query("SELECT product_id, SUM(quantity) FROM \"Fulfilled\" WHERE quantity > 0 GROUP BY product_id ALLOW FILTERING")
     List<Fulfilled> getReport();
 }

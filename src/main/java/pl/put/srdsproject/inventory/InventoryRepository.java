@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface InventoryRepository extends ListCrudRepository<Inventory, InventoryKey> {
 
-    @Query("SELECT * FROM Inventory WHERE id.productId = ?0 AND handlerId is null AND requestId is null LIMIT ?1")
+    @Query("SELECT * FROM \"Inventory\" WHERE id.productId = ?0 AND handlerId = '' AND requestId = '' LIMIT ?1 ALLOW FILTERING")
     List<Inventory> findAvailableProductsByProductId(String productId, Long limit);
 
-    @Query("SELECT * FROM Inventory WHERE id.handlerId = ?0 AND id.requestId = ?1")
+    @Query("SELECT * FROM \"Inventory\" WHERE id.handlerId = ?0 AND id.requestId = ?1 ALLOW FILTERING")
     List<Inventory> findProductsByHandlerIdAndRequestId(String handlerId, String requestId);
 
 //    @Query("SELECT product_id, COUNT(*) FROM Inventory GROUP BY product_id")
