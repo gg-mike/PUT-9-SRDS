@@ -31,6 +31,9 @@ public class RequestService {
     @Value("${cassandra.max-iterations}")
     private int maxIterations;
 
+    @Value("${cassandra.max-fetch-requests}")
+    private int maxFetchRequests;
+
     public RequestReport getReport() {
         var all = requestRepository.findAll();
         var claimed  = all.stream().filter(fulfilled -> !Objects.equals(fulfilled.getApplicationId(), "")).toList();
@@ -57,9 +60,9 @@ public class RequestService {
     }
 
 
-    @Scheduled(fixedRate = 10_000)
+    @Scheduled(fixedDelay = 10_000)
     public void processNewRequests() {
-        var notClaimedRequests = requestRepository.findNotClaimedRequests();
+        var notClaimedRequests = requestRepository.findNotClaimedRequests(maxFetchRequests);
         notClaimedRequests.forEach(this::claimRequest);
 
         // wait for Cassandra to update
@@ -80,7 +83,7 @@ public class RequestService {
 
     private void processRequest(Request request) {
         log.info("Processing request {}", request.getId());
-        // check if request was already fulfilled (crush happened between fulfilled added and request deleted)
+        // check if request was already fulfilled (crash happened between fulfilled added and request deleted)
         try {
             fulfilledService.getById(request.getId());
             requestRepository.deleteById(request.getId());
@@ -88,9 +91,11 @@ public class RequestService {
         } catch(NotFoundException ignored) {}
 
         var previouslyClaimedProducts = inventoryService.findProductsByHandlerIdAndRequestId(applicationId, request.getId()); // if request processing failed while some products were claimed already
-        log.info("Found {} previously claimed products for request {}", previouslyClaimedProducts.size(), request.getId());
-        List<Inventory> collectedProducts = new ArrayList<>(previouslyClaimedProducts);
+        if (!previouslyClaimedProducts.isEmpty()) {
+            log.info("Found {} previously claimed products for request {}", previouslyClaimedProducts.size(), request.getId());
+        }
 
+        List<Inventory> collectedProducts = new ArrayList<>(previouslyClaimedProducts);
         for (int i = 0; i < maxIterations && collectedProducts.size() < request.getQuantity(); i++) {
             var availableProducts = inventoryService.findAvailableProductsByProductIdAndMinimumQuantity(request.getProductId(), request.getQuantity() - collectedProducts.size());
             log.info("Found {} available products for request {}", availableProducts.size(), request.getId());
@@ -128,8 +133,11 @@ public class RequestService {
                     request.getId(), collectedProducts.size(), request.getQuantity());
         }
 
+        if(collectedProducts.size() == request.getQuantity()) {
+            log.info("Fulfilled request: {}", request.getId());
+        }
+
         fulfilledService.add(request);
-        requestRepository.deleteById(request.getId());
     }
 
 

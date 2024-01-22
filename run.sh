@@ -1,1 +1,1 @@
-SERVER_PORT=$1 CASSANDRA_PORT=$2 java -jar ./target/srds-project-0.0.1-SNAPSHOT-spring-boot.jar
+SERVER_PORT=$1 CASSANDRA_PORT=$2 APP_ID=$3 java -jar ./target/srds-project-0.0.1-SNAPSHOT-spring-boot.jar

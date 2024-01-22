@@ -5,7 +5,7 @@ cassandra:
   local-datacenter: datacenter1
   keyspace-name: test2
   replicationFactor: 2
-
+  max-fetch-requests: 100
   update-delay: 1000
   max-iterations: 10
 
@@ -15,3 +15,7 @@ application:
 spring:
   cassandra:
     schema-action: create_if_not_exists
+logging:
+  level:
+    com.datastax: ERROR
+

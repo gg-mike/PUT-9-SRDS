@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends ListCrudRepository<Request, String> {
 
-    @Query("SELECT * FROM requests WHERE application_id = '' ALLOW FILTERING")
-    List<Request> findNotClaimedRequests();
+    @Query("SELECT * FROM requests WHERE application_id = '' LIMIT ?0 ALLOW FILTERING")
+    List<Request> findNotClaimedRequests(int maxFetchRequests);
 
     @Query("SELECT * FROM requests WHERE application_id = ?0 ALLOW FILTERING")
     List<Request> findClaimedRequests(String applicationId);
