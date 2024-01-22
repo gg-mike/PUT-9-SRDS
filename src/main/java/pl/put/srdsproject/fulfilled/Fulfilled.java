@@ -21,11 +21,14 @@ public class Fulfilled {
     private Long quantity;
     @Column("application_id")
     private String applicationId;
+    @Column("is_successful")
+    private boolean isSuccessful;
 
-    public Fulfilled(Request request) {
+    public Fulfilled(Request request, boolean isSuccessful) {
         this.id = request.getId();
         this.productId = request.getProductId();
         this.quantity = request.getQuantity();
         this.applicationId = request.getApplicationId();
+        this.isSuccessful = isSuccessful;
     }
 }

@@ -16,7 +16,7 @@ public class FulfilledService {
 
     public FulfilledReport getReport() {
         var all = fulfillmentRepository.findAll();
-        var succeeded  = all.stream().filter(fulfilled -> fulfilled.getQuantity() != -1).toList();
+        var succeeded  = all.stream().filter(Fulfilled::isSuccessful).toList();
         return new FulfilledReport(
                 all.size() - succeeded.size(),
                 succeeded.size(),
@@ -32,8 +32,8 @@ public class FulfilledService {
         return fulfillmentRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    public void add(Request request) {
-        fulfillmentRepository.save(new Fulfilled(request));
+    public void add(Request request, boolean isSuccessful) {
+        fulfillmentRepository.save(new Fulfilled(request, isSuccessful));
     }
 
     public void deleteAll() {

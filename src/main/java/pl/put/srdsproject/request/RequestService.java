@@ -121,6 +121,7 @@ public class RequestService {
             collectedProducts.addAll(updatedProducts);
         }
 
+        boolean isSuccessful = true;
         if (collectedProducts.size() != request.getQuantity()) {
             //not enough products available - request marked as failed
             for (var product : collectedProducts) {
@@ -128,16 +129,16 @@ public class RequestService {
                 product.setRequestId("");
             }
             inventoryService.saveAll(collectedProducts);
-            request.setQuantity(-1L);
             log.warn("Could not fulfill request: {} (collected: {}, requested: {})",
                     request.getId(), collectedProducts.size(), request.getQuantity());
+            isSuccessful = false;
         }
 
         if(collectedProducts.size() == request.getQuantity()) {
             log.info("Fulfilled request: {}", request.getId());
         }
 
-        fulfilledService.add(request);
+        fulfilledService.add(request, isSuccessful);
     }
 
 
