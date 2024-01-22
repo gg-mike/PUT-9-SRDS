@@ -9,15 +9,15 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends ListCrudRepository<Request, String> {
 
-    @Query("SELECT * FROM \"Request\" WHERE applicationId = '' ALLOW FILTERING")
+    @Query("SELECT * FROM requests WHERE application_id = '' ALLOW FILTERING")
     List<Request> findNotClaimedRequests();
 
-    @Query("SELECT * FROM \"Request\" WHERE applicationId = ?0 ALLOW FILTERING")
+    @Query("SELECT * FROM requests WHERE application_id = ?0 ALLOW FILTERING")
     List<Request> findClaimedRequests(String applicationId);
 
-    @Query("DELETE FROM \"Request\" WHERE id IN ?0")
+    @Query("DELETE FROM requests WHERE id IN ?0")
     void deleteProcessedRequests(List<String> requestIds);
 
-    @Query("SELECT product_id, SUM(quantity) FROM \"Request\" WHERE quantity > 0 GROUP BY product_id ALLOW FILTERING")
+    @Query("SELECT product_id, quantity FROM requests WHERE quantity > 0 ALLOW FILTERING")
     List<Request> getReport();
 }

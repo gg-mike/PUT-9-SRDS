@@ -3,17 +3,18 @@ package pl.put.srdsproject.request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.LongSummaryStatistics;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/request")
+@RequestMapping("/requests")
 @RequiredArgsConstructor
 public class RequestController {
     private final RequestService requestService;
 
     @GetMapping
-    public List<RequestReport> getReport() {
+    public Map<String, LongSummaryStatistics> getReport() {
         return requestService.getReport();
     }
 

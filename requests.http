@@ -1,0 +1,33 @@
+# @name Get Fulfilled report
+GET localhost:3000/fulfilled
+
+###
+
+# @name Get single Fulfilled request
+GET localhost:3000/fulfilled/{{}}
+
+###
+
+# @name Get Inventory report
+GET localhost:3000/inventory
+
+###
+
+# @name Add product to inventory
+POST localhost:3000/inventory
+Content-Type: application/json
+
+{ "productId": "test", "quantity": 10 }
+
+###
+
+# @name Get Requests report
+GET localhost:3000/requests
+
+###
+
+# @name Add request
+POST localhost:3000/requests
+Content-Type: application/json
+
+{ "productId": "test", "quantity": 2 }

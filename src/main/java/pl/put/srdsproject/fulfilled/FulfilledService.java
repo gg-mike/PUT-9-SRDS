@@ -5,17 +5,21 @@ import org.springframework.stereotype.Service;
 import pl.put.srdsproject.request.Request;
 import pl.put.srdsproject.util.NotFoundException;
 
-import java.util.List;
+import java.util.LongSummaryStatistics;
+import java.util.Map;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summarizingLong;
 
 @Service
 @RequiredArgsConstructor
 public class FulfilledService {
     private final FulfilledRepository fulfillmentRepository;
 
-    public List<FulfilledReport> getReport() {
+    public Map<String, LongSummaryStatistics> getReport() {
         return fulfillmentRepository.getReport()
                 .stream().map(fulfilled -> new FulfilledReport(fulfilled.getProductId(), fulfilled.getQuantity()))
-                .toList();
+                .collect(groupingBy(FulfilledReport::productId, summarizingLong(FulfilledReport::quantity)));
     }
 
     public Fulfilled getFulfilled(String id) {

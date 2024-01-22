@@ -1,9 +1,11 @@
 package pl.put.srdsproject.inventory;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.LongSummaryStatistics;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/inventory")
@@ -12,12 +14,12 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
     @GetMapping
-    public List<InventoryReport> getReport() {
+    public Map<String, LongSummaryStatistics> getReport() {
         return inventoryService.getReport();
     }
 
     @PostMapping
-    public List<Inventory> addProducts(@RequestBody InventoryOperation operation) {
-        return inventoryService.addProduct(operation.productId(), operation.quantity());
+    public Pair<String, Integer> addProducts(@RequestBody InventoryOperation operation) {
+        return Pair.of(operation.productId(), inventoryService.addProduct(operation.productId(), operation.quantity()).size());
     }
 }
