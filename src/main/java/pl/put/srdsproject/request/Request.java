@@ -13,12 +13,13 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @AllArgsConstructor
 public class Request {
 
-    @PrimaryKey("id")
+    @PrimaryKey("application_id")
+    private String applicationId;
+    @Column("id")
     private String id;
     @Column("product_id")
     private String productId;
     @Column("quantity")
     private Long quantity;
-    @Column("application_id")
-    private String applicationId;
+
 }

@@ -36,7 +36,7 @@ public class RequestService {
 
     public RequestReport getReport() {
         var all = requestRepository.findAll();
-        var claimed  = all.stream().filter(fulfilled -> !Objects.equals(fulfilled.getApplicationId(), "")).toList();
+        var claimed  = all.stream().filter(fulfilled -> !Objects.equals(fulfilled.getApplicationId(), "none")).toList();
         return new RequestReport(
                 all.size() - claimed.size(),
                 claimed.size(),
@@ -71,7 +71,7 @@ public class RequestService {
         var claimedRequests = requestRepository.findClaimedRequests(applicationId); //will also return all claimed during which the system failed
         processRequests(claimedRequests);
 
-        requestRepository.deleteProcessedRequests(claimedRequests.stream().map(Request::getId).toList());
+        requestRepository.deleteAll(claimedRequests);
     }
 
 
@@ -125,8 +125,8 @@ public class RequestService {
         if (collectedProducts.size() != request.getQuantity()) {
             //not enough products available - request marked as failed
             for (var product : collectedProducts) {
-                product.setHandlerId("");
-                product.setRequestId("");
+                product.setHandlerId("none");
+                product.setRequestId("none");
             }
             inventoryService.saveAll(collectedProducts);
             log.warn("Could not fulfill request: {} (collected: {}, requested: {})",

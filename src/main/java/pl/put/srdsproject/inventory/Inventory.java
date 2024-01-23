@@ -14,13 +14,13 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @AllArgsConstructor
 public class Inventory {
 
-    @PrimaryKeyColumn(name = "unique_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private String uniqueId;
-    @PrimaryKeyColumn(name = "product_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private String productId;
-    @Column("handler_id")
+    @PrimaryKeyColumn(name = "handler_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String handlerId;
-    @Column("request_id")
+    @PrimaryKeyColumn(name = "request_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private String requestId;
+    @Column("unique_id")
+    private String uniqueId;
+    @Column("product_id")
+    private String productId;
 
 }

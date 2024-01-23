@@ -15,7 +15,7 @@ public class InventoryService {
     public List<Inventory> add(String productId, Long quantity) {
         var products = new ArrayList<Inventory>();
         for (int i = 0; i < quantity; i++) {
-            products.add(new Inventory(UUID.randomUUID().toString(), productId, "", ""));
+            products.add(new Inventory("none", "none", UUID.randomUUID().toString(), productId));
         }
 
         return inventoryRepository.saveAll(products);
@@ -39,10 +39,10 @@ public class InventoryService {
 
         return new InventoryReport(
                 all.stream()
-                        .filter(inventory -> Objects.equals(inventory.getRequestId(), ""))
+                        .filter(inventory -> Objects.equals(inventory.getRequestId(), "none"))
                         .collect(groupingBy(Inventory::getProductId, counting())),
                 all.stream()
-                        .filter(inventory -> !Objects.equals(inventory.getRequestId(), ""))
+                        .filter(inventory -> !Objects.equals(inventory.getRequestId(), "none"))
                         .collect(groupingBy(Inventory::getProductId, counting())),
                 all.stream().collect(groupingBy(Inventory::getProductId, counting()))
         );

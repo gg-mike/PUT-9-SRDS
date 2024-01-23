@@ -20,10 +20,10 @@ public class RequestController {
     @PostMapping
     public Request add(@RequestBody RequestOperation operation) {
         var request = new Request(
-                UUID.randomUUID().toString(),
+                "none",
                 operation.productId(),
-                operation.quantity(),
-                ""
+                UUID.randomUUID().toString(),
+                operation.quantity()
         );
         return requestService.add(request);
     }
